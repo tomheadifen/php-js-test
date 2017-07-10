@@ -7,41 +7,26 @@ function init() {
 
 function createContacts() {
 	var contact = {};
+	//Populate the allContacts array
 	for (var i = 0; i < request.contacts.length; i++) {
 		contact = request.contacts[i];
-		allContacts.push(new Contact(contact.id, contact.name, contact.number));
+		allContacts.push(new Contact(contact.name, contact.number));
 	}
-	populateSelect();
+
+	// Populate the select box with all contacts array
+	for(var i = 0; i < allContacts.length; i++) {
+		populateSelect(allContacts[i]);
+	}
 }
 
-function populateSelect() {
+function populateSelect(value) {
 	var selectBox = document.getElementById("allContacts"), options;
 
-	//Loop to create options for select box
-	for(var i = 0; i < allContacts.length; i++)
-	{
-	   options = document.createElement("option");
-	   //Populate Id as an attribute so that we get correct item in array
-	   options.setAttribute('value', allContacts[i].id);
-	   options.appendChild(document.createTextNode(allContacts[i].name));
-	   selectBox.appendChild(options);
-	}
-}
-
-function getSelected() {
-	var selectedContacts = [], selectedOptions = [];
-	// Returns the options that are selected
-	selectedOptions = document.getElementById("allContacts").selectedOptions;
-
-	// Return objects we created by first looping through what we selected
-	for (var i = 0; i < selectedOptions.length; i++) {
-		// Filter from itself so that we get all items
-		// Returns array so grab first object to push in
-		selectedContacts.push(allContacts.filter(function(contact) {
-		    return contact.id == selectedOptions[i].value;
-		})[0]);
-	}
-	return selectedContacts;
+	options = document.createElement("option");
+	//Populate Id as an attribute so that we get correct item in array
+	options.setAttribute('value', value.id);
+	options.appendChild(document.createTextNode(value.name));
+	selectBox.appendChild(options);
 }
 
 function deleteSelected() {
@@ -60,16 +45,62 @@ function deleteSelected() {
 	}
 }
 
+function addContact() {
+	var name, number;
+	name = document.getElementById("newName");
+	number = document.getElementById("newNumber");
 
-function Contact(id, name, number) {
-	this.id = id;
+	if (name.length < 3 || number.length < 3) {
+		throw("Name or Number too small")
+	} else {
+		allContacts.push(new Contact(name.value, number.value));
+		// We need to get the element again to get the id.
+		populateSelect(allContacts[allContacts.length - 1]);
+	}
+
+	//Set inputs back to empty
+	name.value = '';
+	number.value = '';
+	
+}
+
+function Contact(name, number) {
+	this.id = this.generateId();
 	this.name = name;
 	this.number = number;
 }
 
+/**
+ * Removes the Contact from the allContacts array
+ * @return {void}
+ */
 Contact.prototype.destroy = function() {
 	allContacts.slice(this.id);
 };
+
+/**
+ * Generate a random ID to stop conflicts
+ * @return {number} a random Id
+ */
+Contact.prototype.generateId = function() {
+	var randomNumber, isNumberFound = true;
+
+	// If we find the number then another number gets generated. 
+	while(isNumberFound === true) {
+		randomNumber = Math.floor(Math.random()*100) + 1;
+		isNumberFound = false;
+		// Loop through other contacts to make sure we don't duplicate
+		for(var i = 0; i < allContacts.length; i++) {
+			if (allContacts[i].id == randomNumber) {
+				isNumberFound = true;
+				break;
+			} else {
+				isNumberFound = false;
+			}
+		}
+	}
+	return randomNumber;
+}
 
 /**
  * Dummy API
