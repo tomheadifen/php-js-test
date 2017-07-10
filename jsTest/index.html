@@ -7,7 +7,9 @@
 		<select multiple id="allContacts">
 		</select>
 		<br>
-		<button id="sortContacts">Sort</button>
+		<button onCLick="sortSelect('name')" id="sortContacts">Sort By Name</button>
+		<button onCLick="sortSelect('number')" id="sortContacts">Sort By Number</button>
+		<button onCLick="sortSelect('email')" id="sortContacts">Sort By Email</button>
 		<button onClick="deleteSelected()" id="deleteContacts">Delete</button>
 	</div>
 	<br>
@@ -15,6 +17,7 @@
 		<label>Add Contact</label>
 		<input type="text" id="newName" placeholder="Name">
 		<input type="text" id="newNumber" placeholder="Number">
+		<input type="text" id="newEmail" placeholder="Email">
 		<button onClick="addContact()" id="addContact">Add</button>
 	</div>
 </div>
