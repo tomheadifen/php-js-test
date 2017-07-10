@@ -16,7 +16,7 @@ class PrimeNumberGenerator
 
 	/**
 	 * Generate an array of random prime numbers to a maximum value
-	 * @return [array]                      [An array of random prime numbers]
+	 * @return [void]
 	 */
 	public function generate()
 	{

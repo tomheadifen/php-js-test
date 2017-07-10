@@ -62,4 +62,43 @@ class Shephard
 		}
 		return $soulMates;
 	}
+
+	/**
+	 * difference between highest and lowest
+	 * @param  array $group array of animals
+	 * @return number        The Range
+	 */
+	public function getRangeOfSerial($group) {
+		$animals = $this->flattenAnimals($group);
+		sort($animals);
+		return $animals[count($animals) -1] - $animals[0];
+	}
+
+	public function getTotalOfSerial($group)
+	{
+		return array_sum($this->flattenAnimals($group));
+	}
+
+	public function getAverageOfSerial($group)
+	{
+		$serials = $this->flattenAnimals($group);
+
+		$total = $this->getTotalOfSerial($group);
+		$count = count($serials);
+
+		return $total/$count;
+	}
+
+	/**
+	 * Flatten the array of animals to a one dimensional array
+	 * @param  array $group Array of objects
+	 * @return array        flat array of numbers
+	 */
+	private function flattenAnimals($group) {
+		$serialNumbers = [];
+		foreach ($group as $value) {
+			array_push($serialNumbers, $value->serial);
+		}
+		return $serialNumbers;
+	}
 }
